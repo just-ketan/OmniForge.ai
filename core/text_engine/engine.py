@@ -13,7 +13,7 @@ class TextEngine:
 
     def __init__(self, model_path:str):
         self.loader = ModelLoader(model_path=model_path)
-        #self.loader().load()
+        self.loader.load()
         self.generator = TextGenerator(self.loader.get_model())
         self.brand_configs = {}   # temp in memory store
 

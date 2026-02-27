@@ -8,17 +8,16 @@ logger = logging.getLogger(__name__)
 
 class ModelLoader:
     # loads and manages llama.cpp model instance
-    def __init__(self, model_path:str, n_cxt: int=4096, n_threads: Optional[int]=None,):
+    def __init__(self, model_path:str):
         self.model_path = model_path
-        self.n_cxt = n_cxt
-        self.n_threads = n_threads
-        self.model : Optional[Llama] = None
+        self.model = None
     
     def load(self) -> None:
         # load quantized GGUF model
         try:
             logger.info("Loading model from %s", self.model_path)
-            self.model = Llama(model_path=self.model_path, n_ctx=self.n_cxt, n_threads=self.n_threads, verbose=False,)
+            if self.model is None:
+                self.model = Llama(model_path=self.model_path, n_ctx=2048, n_threads=8,)
             logger.info("Model Loaded Successfully")
         except Exception as e:
             logger.exception("Failed to load model.")

@@ -1,10 +1,29 @@
-# test driver
-import logging
 from core.text_engine.engine import TextEngine
 
-logging.basicConfig(level=logging.INFO)
-MODEL_PATH="models/mistral-7b-instruct-q4-k-m.gguf"
-engine = TextEngine(model_path=MODEL_PATH)
-engine.register_brand("nike",{"banned_words":["cheap", "discount"], "competitors":["adidas","puma"], "temperature":0.6, "top_p":0.9, "deterministic":False, "max_tokens":200,},)
-resonse = engine.generate("nike", "write a premium linkedin post about our new performance running shoe.")
+engine = TextEngine(
+    model_path="models/mistral-7b-instruct-v0.2.Q4_K_M.gguf"
+)
+
+engine.register_brand(
+    "nike",
+    {
+        "brand_name": "Nike",
+        "tone": "Bold and inspirational",
+        "style": "High-performance and premium",
+        "audience": "Serious athletes",
+        "banned_words": ["cheap"],
+        "competitors": ["Adidas"],
+        "temperature": 0.6,
+        "top_p": 0.9,
+        "max_tokens": 120,
+    },
+)
+
+print("\n--- BASIC GENERATION ---\n")
+
+response = engine.generate(
+    "nike",
+    "Write a LinkedIn launch post for our new marathon racing shoe."
+)
+
 print(response)
