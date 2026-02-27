@@ -11,6 +11,13 @@ class OutputFilter:
     def __init__(self, banned_words:List[str]):
         self.banned_words = banned_words
     
+    def has_violation(self, text:str) -> bool:
+        for word in self.banned_words:
+            pattern = re.compile(rf"\b{re.escape(word)}\b", re.IGNORECASE)
+            if(pattern.search(word)):
+                return True
+        return False
+    
     def sanitize(self, text:str) ->str:
         # replace banned words with redacted tokens
         sanitized = text

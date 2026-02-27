@@ -1,4 +1,21 @@
-llama-cpp-python 
-fastapi 
-uvicorn 
-pydantic
+# ---- Core Inference (CPU - llama.cpp backend) ----
+llama-cpp-python==0.3.16
+
+# ---- Web API ----
+fastapi==0.115.2
+uvicorn[standard]==0.30.6
+
+# ---- Validation / Schemas ----
+pydantic==2.8.2
+pydantic-core==2.20.1
+
+# ---- Required Runtime Dependencies (Pinned for Stability) ----
+numpy==1.26.4
+typing-extensions==4.12.2
+jinja2==3.1.4
+diskcache==5.6.3
+
+# ---- Async Support ----
+anyio==4.4.0
+h11==0.14.0
+click==8.1.7

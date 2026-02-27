@@ -1,1 +1,132 @@
-.venv
+# ==============================
+# 🔹 Python
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.so
+*.dylib
+*.dll
+
+.Python
+.env
+.env.*
+.venv/
+venv/
+ENV/
+env/
+
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ==============================
+# 🔹 Logs
+# ==============================
+*.log
+logs/
+*.out
+
+# ==============================
+# 🔹 Model Files (Very Important)
+# ==============================
+# GGUF / GGML / LLM binaries
+models/
+*.gguf
+*.ggml
+*.bin
+*.safetensors
+
+# HuggingFace cache
+.cache/
+huggingface/
+~/.cache/huggingface/
+
+# ==============================
+# 🔹 Vector DB / RAG
+# ==============================
+data/embeddings/
+*.faiss
+*.index
+*.npy
+*.pkl
+
+# ==============================
+# 🔹 LoRA / Fine-tuning Artifacts
+# ==============================
+data/lora_weights/
+checkpoints/
+trainer_state.json
+adapter_config.json
+adapter_model.bin
+
+# ==============================
+# 🔹 Diffusion / Image Outputs
+# ==============================
+outputs/
+generated_images/
+*.png
+*.jpg
+*.jpeg
+
+# ==============================
+# 🔹 RLHF / Reward Models
+# ==============================
+reward_models/
+feedback_data/
+*.csv
+*.jsonl
+
+# ==============================
+# 🔹 FastAPI / Runtime
+# ==============================
+*.db
+*.sqlite3
+
+# ==============================
+# 🔹 Celery / Redis (future)
+# ==============================
+celerybeat-schedule
+*.pid
+
+# ==============================
+# 🔹 IDE
+# ==============================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==============================
+# 🔹 OS Junk
+# ==============================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# 🔹 Docker (future)
+# ==============================
+docker-compose.override.yml
+*.tar
+
+# ==============================
+# 🔹 Coverage / Testing
+# ==============================
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# ==============================
+# 🔹 Build Artifacts
+# ==============================
+build/
+dist/
+*.egg-info/
+
+# ==============================
+# 🔹 Large Temporary Files
+# ==============================
+*.tmp
+*.bak
