@@ -11,11 +11,13 @@ class BrandPolicy:
         self.max_tokens = config.get("max_tokens", 300)
     
     def get_effective_temperature(self) -> float:
+        #if deterministic return 0.0
         if self.deterministic:
             return 0.0
         return self.temperature
 
     def get_effective_top_p(self) -> float:
+        #if deterministic return 1.0
         if self.deterministic:
             return 1.0
         return self.top_p
