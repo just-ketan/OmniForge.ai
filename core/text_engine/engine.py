@@ -26,11 +26,12 @@ class TextEngine:
         # register a brand config and optionally ingest brand knowledge in RAG
         self.brand_configs[brand_id] = config
         logger.info("Registered brand: %s", brand_id)
+        rag = RAGPipeline(brand_id=brand_id)
+        self.brand_rag[brand_id] = rag
         if knowledge_path:
             logger.info("Ingesting knowledge for brand : %s", brand_id)
-            rag = RAGPipeline()
             rag.ingest_pdf(knowledge_path)
-            self.brand_rag[brand_id] = rag
+    
     
     def generate(self, brand_id:str, prompt:str) -> str:
         if brand_id not in self.brand_configs:
@@ -43,7 +44,7 @@ class TextEngine:
         context_text=""
         if brand_id in self.brand_rag:
             context_chunks = self.brand_rag[brand_id].retrieve_context(prompt)
-            context_text = "\n\n".join(context_chunks)
+            context_text = "\n\n".join([c["text"] for c in context_chunks])
         
         builder = PromptBuilder(config)
 

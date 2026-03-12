@@ -1,3 +1,5 @@
+from core.text_engine.engine import TextEngine
+
 engine = TextEngine(
     model_path="models/mistral-7b-instruct-v0.2.Q4_K_M.gguf"
 )

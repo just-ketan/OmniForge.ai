@@ -9,7 +9,7 @@ class DocumentLoader:
             text += page.extract_text() or ""
         return text
     
-    def chunk_test(self, text:str, chunk_size:int=500, overlap:int=50):
+    def chunk_text(self, text:str, chunk_size:int=500, overlap:int=50):
         chunks = []
         start = 0
         while start < len(text):

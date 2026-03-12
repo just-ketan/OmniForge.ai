@@ -4,6 +4,6 @@ class Retriever:
         self.vector_store = vector_store
 
     def retrieve(self, query:str, top_k:int = 3):
-        query_embedding = self.embedder.encode([query])
+        query_embedding = self.embedder.encode_query(query)
         results = self.vector_store.search(query_embedding, top_k)
         return results
