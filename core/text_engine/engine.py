@@ -27,6 +27,7 @@ class TextEngine:
         self.brand_configs[brand_id] = config
         logger.info("Registered brand: %s", brand_id)
         rag = RAGPipeline(brand_id=brand_id)
+        rag.attach_query_rewriter(self.generator)
         self.brand_rag[brand_id] = rag
         if knowledge_path:
             logger.info("Ingesting knowledge for brand : %s", brand_id)
@@ -83,7 +84,7 @@ class TextEngine:
         context_text = ""
         if brand_id in self.brand_rag:
             context_chunk = self.brand_rag[brand_id].retrieve_context(prompt)
-            context_text = "\n\n".join(context_chunk)
+            context_text = "\n\n".join([c["text"] for c in context_chunk])
 
         builder = PromptBuilder(config)
         if context_text:

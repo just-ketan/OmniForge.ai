@@ -25,3 +25,8 @@ class TextGenerator:
             if "choices" in chunk:
                 token = chunk["choices"][0]["text"]
                 yield token
+
+    # generate RAW
+    def generate_raw(self, prompt, max_tokens=64):
+        output = self.model(prompt, max_tokens, temperature=0.2)
+        return output["choices"][0]["text"]
