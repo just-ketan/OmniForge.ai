@@ -72,3 +72,27 @@ class TextEngine:
             policy.temperature = max(0.3, policy.temperature-0.1)
         # final fallback sanitize and return
         return filter_layer.sanitize(raw_output)
+    
+    # add LLM streaming layer
+    def generate_stream(self, brand_id, prompt):
+        if brand_id not in self.brand_configs:
+            raise ValueError(f"Brand '{brand_id}' not registered.")
+        config = self.brand_configs[brand_id]
+        policy = BrandPolicy(config)
+
+        context_text = ""
+        if brand_id in self.brand_rag:
+            context_chunk = self.brand_rag[brand_id].retrieve_context(prompt)
+            context_text = "\n\n".join(context_chunk)
+
+        builder = PromptBuilder(config)
+        if context_text:
+            augmented_prompt = f"""
+Brand Knowledge: {context_text}
+User Request: {prompt}
+"""
+        else:
+            augmented_prompt = prompt
+        
+        structured_prompt = builder.build(augmented_prompt)
+        yield from self.generator.generate_stream(structured_prompt=structured_prompt, policy=policy)

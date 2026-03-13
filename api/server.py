@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends
 from api.schemas import (BrandRegistration, GenerateResponse, GenerationRequest)
 from api.dependencies import get_engine
 from core.text_engine.engine import TextEngine
+from fastapi import StreamingResponse
 
 app = FastAPI(
     title="OmniForge.ai",
@@ -22,3 +23,10 @@ def register_brand(request: BrandRegistration, engine : TextEngine = Depends(get
 def generate_text(request:GenerationRequest, engine:TextEngine = Depends(get_engine)):
     output = engine.generate(brand_id=request.brand_id, prompt=request.prompt)
     return {"output":output}
+
+@app.post("/generate_stream")
+def generate_stream(request:GenerationRequest, engine:TextEngine = Depends(get_engine)):
+    def token_generator():
+        for token in engine.generate_stream(request.brand_id, request.prompt):
+            yield token
+    return StreamingResponse(token_generator(), media_type="text/plain")

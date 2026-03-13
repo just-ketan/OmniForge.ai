@@ -17,3 +17,11 @@ class TextGenerator:
         except Exception as e:
             logger.exception("Text generaiton failed")
             raise RuntimeError("Generation error") from e
+    
+    # add LLM streaming layer
+    def generate_stream(self, structured_prompt, policy):
+        stream = self.model(structured_prompt, max_tokens=policy.max_tokens, temperature=policy.temperature, top_p=policy.top_p, stop=["</s>"], stream=True)
+        for chunk in stream:
+            if "choices" in chunk:
+                token = chunk["choices"][0]["text"]
+                yield token
