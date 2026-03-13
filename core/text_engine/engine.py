@@ -68,7 +68,7 @@ class TextEngine:
             if not filter_layer.has_violation(raw_output):
                 return raw_output
             # if violation, reduce temp and retry
-            logger.warning("Policy Violation detected. Retrying.... Ateemp: %s", attempt+1)
+            logger.warning("Policy Violation detected. Retrying.... Attempt: %s", attempt+1)
             policy.temperature = max(0.3, policy.temperature-0.1)
         # final fallback sanitize and return
         return filter_layer.sanitize(raw_output)

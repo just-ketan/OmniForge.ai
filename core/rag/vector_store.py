@@ -38,9 +38,12 @@ class VectorStore:
         distances, indices = self.index.search(query_embedding, top_k)
         results = []
 
-        for idx in indices[0]:
+        for dist, idx in zip(distances[0], indices[0]):
             if idx < len(self.metadata):
-                results.append(self.metadata[idx])
+                results.append({
+                    "score" : float(dist),
+                    "data" : self.metadata[idx]
+                })
         return results
     
     def save(self):
