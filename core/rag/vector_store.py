@@ -27,8 +27,12 @@ class VectorStore:
         embeddings = np.array(embeddings).astype("float32")
         self.index.add(embeddings)
         self.metadata.extend(metadata)
+        print(f"FAISS vectors stored: {self.index.ntotal}")
     
     def search(self, query_embedding, top_k=5):
+        if self.index.ntotal == 0:
+            return []
+        
         query_embedding = np.array(query_embedding).astype("float32")
 
         # ensure FAISS receives (n_queries, dim)

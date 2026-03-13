@@ -7,20 +7,22 @@ class RAGPipeline:
     def __init__(self, brand_id):
         self.brand_id = brand_id
         self.loader = DocumentLoader()
-        self.retriever = None
         self.embedder = Embedder()
         self.vector_store = VectorStore(brand_id=self.brand_id, embedding_dim=self.embedder.dimension)
+        self.retriever = Retriever(self.embedder, self.vector_store)
     
     def ingest_pdf(self, path:str):
         text = self.loader.load_pdf(path)
         chunks = self.loader.chunk_text(text)
+        texts = [c["text"] for c in chunks]
 
-        embeddings = self.embedder.encode(chunks)   #encode the chunks
+        embeddings = self.embedder.encode(texts)   #encode the chunks
 
         metadata = []
         for i, chunk in enumerate(chunks):
             metadata.append({
-                "text":chunk,
+                "text":chunk["text"],
+                "section": chunk["section"],
                 "source":path,
                 "chunk_id":i
             })
@@ -28,7 +30,6 @@ class RAGPipeline:
         # dim = embeddings.shape[1]
         self.vector_store.add(embeddings, metadata=metadata)
         self.vector_store.save()
-        self.retriever = Retriever(self.embedder, self.vector_store)
 
     def retrieve_context(self, query:str):
         if not self.retriever:
