@@ -1,8 +1,11 @@
+from reranker import Reranker
+
 class Retriever:
     def __init__(self, embedder, vector_store, keyword_index):
         self.embedder = embedder
         self.vector_store = vector_store
         self.keyword_index = keyword_index
+        self.reranker = Reranker()
 
     def retrieve(self, query, top_k=5, threshold=1.2, section=None):
         query_embedding = self.embedder.encode_query(query)
@@ -25,7 +28,9 @@ class Retriever:
 
             hybrid.append(data["text"])
         # remove duplicates and restrict to top_k results
-        return list(set(hybrid)[:top_k])
+        unique_chunks = list(set(hybrid))
+        reranked = self.reranker.rerank(query, unique_chunks, top_k=top_k)
+        return reranked
 
         '''
         filtered = []
