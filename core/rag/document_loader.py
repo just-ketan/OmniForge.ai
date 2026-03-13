@@ -1,7 +1,10 @@
 # pdf ingestion + chunking
 from pypdf import PdfReader
-
+from .section_classifier import SectionClassifier
 class DocumentLoader:
+    def __init__(self):
+        self.classifier = SectionClassifier()
+
     def load_pdf(self, path:str) -> str:
         reader = PdfReader(path)
         text=""
@@ -27,7 +30,7 @@ class DocumentLoader:
                 continue
             metadata = {
                 "text" : chunk,
-                "section" : "general"
+                "section" : self.classifier.classify(chunk)
             }
             chunks.append(metadata) # returning structured chunks
         return chunks
