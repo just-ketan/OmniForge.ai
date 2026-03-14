@@ -1,4 +1,6 @@
 import os
+from peft import PeftModel
+
 class AdapterLoader:
     def __init__(self, base_model):
         self.base_model = base_model
@@ -11,8 +13,8 @@ class AdapterLoader:
         if brand_id in self.loaded_adapters:
             return self.loaded_adapters[brand_id]
         
-        #placeholder for actual LoRA loading
-        model = self.base_model
+        #peft model for LoRA loading
+        model = PeftModel.from_pretrained(self.base_model, adapter_path)
         self.loaded_adapters[brand_id]=model
 
         return model

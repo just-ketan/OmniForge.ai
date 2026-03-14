@@ -1,6 +1,9 @@
+from .query_rewriter import QueryRewriter
+
 class OmniOrchestrator:
     def __init__(self, engine):
         self.engine = engine
+        self.rewriter = QueryRewriter()
 
     def run(self, brand_id, query):
         planned_query = self.plan(query)    # planner agent
@@ -10,8 +13,8 @@ class OmniOrchestrator:
         return response
     
     def plan(self, query):
-        ## need to implement query rewriting
-        return query
+        ## wire query rewriting
+        return self.rewriter.rewrite(query)
     
     def retrieve(self, brand_id, query):
         if brand_id in self.engine.brand_rag:
