@@ -6,6 +6,9 @@ from api.tasks import generate_text_task
 from api.tasks import celery
 from fastapi.responses import StreamingResponse
 
+from core.feedback.store import FeedbackStore
+from api.schemas_feedback import FeedbackRequest
+
 app = FastAPI(
     title="OmniForge.ai",
     description="Brand Intelligence Generation System",
@@ -50,3 +53,15 @@ def get_task(task_id):
             "result" : task.result
         }
     return {"status":"processing"}
+
+## creating feedback api
+feedback_store = FeedbackStore()
+@app.post("/feedback")
+def submit_feedback(req : FeedbackRequest):
+    feedback_store.save(
+        prompt=req.prompt,
+        response=req.response,
+        rating=req.rating,
+        brand_id=req.brand_id
+    )
+    return {"status":"feedback recorded"}
