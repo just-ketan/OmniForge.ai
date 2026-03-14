@@ -8,7 +8,7 @@ from sentence_transformers import CrossEncoder
 
 class Reranker:
     def __init__(self):
-        self.mdoel = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2", device="cpu")
+        self.model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2", device="cpu")
         # small 80MB model that runs aptly on CPU
 
     def rerank(self, query, chunks, top_k=5):

@@ -70,7 +70,7 @@ class TextEngine:
         max_attempts = 3
         for attempt in range(max_attempts):
             # raw_output = self.generator.generate(structured_prompt=structured_prompt, policy=policy)
-            model = self.adapter_loader.load_adapter(brand_id=self.brand_id)
+            model = self.adapter_loader.load_adapter(brand_id=brand_id)
             generator = TextGenerator(model)
             raw_output = self.generator.generate(structured_prompt=structured_prompt, policy=policy)
 
