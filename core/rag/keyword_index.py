@@ -6,15 +6,19 @@ from rank_bm25 import BM25Okapi
 class KeywordIndex:
     def __init__(self):
         self.documents = []
+        self.tokenized_docs = []
         self.bm25 = None
     
     def build(self, chunks):
         self.documents = [c["text"] for c in chunks]
-        self.bm25 = BM25Okapi(self.documents)
+        self.tokenized_docs = [doc.lower().split() for doc in self.documents]
+        self.bm25 = BM25Okapi(self.tokenized_docs)
 
     def search(self, query, top_k=5):
-        query_tokens = query.split()
-        scores = self.bm25.get_store(query_tokens)
+        if self.bm25 is None:
+            return []
+        query_tokens = query.lower().split()
+        scores = self.bm25.get_scores(query_tokens)
 
         ranked = sorted(enumerate(scores), key = lambda x : x[1], reverse = True)
 

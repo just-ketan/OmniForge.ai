@@ -31,7 +31,7 @@ class TextEngine:
         self.brand_configs[brand_id] = config
         logger.info("Registered brand: %s", brand_id)
         rag = RAGPipeline(brand_id=brand_id)
-        rag.attach_query_rewriter(self.generator)
+        # rag.attach_query_rewriter(self.generator) # we moved this implementation over to orchestrator
         self.brand_rag[brand_id] = rag
         if knowledge_path:
             logger.info("Ingesting knowledge for brand : %s", brand_id)
