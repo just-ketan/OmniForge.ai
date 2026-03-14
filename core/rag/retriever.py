@@ -1,4 +1,4 @@
-from reranker import Reranker
+from .reranker import Reranker
 
 class Retriever:
     def __init__(self, embedder, vector_store, keyword_index):

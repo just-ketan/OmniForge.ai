@@ -2,7 +2,9 @@ from fastapi import FastAPI, Depends
 from api.schemas import (BrandRegistration, GenerateResponse, GenerationRequest)
 from api.dependencies import get_engine
 from core.text_engine.engine import TextEngine
-from fastapi import StreamingResponse
+from api.tasks import generate_text_task
+from api.tasks import celery
+from fastapi.responses import StreamingResponse
 
 app = FastAPI(
     title="OmniForge.ai",
@@ -30,3 +32,21 @@ def generate_stream(request:GenerationRequest, engine:TextEngine = Depends(get_e
         for token in engine.generate_stream(request.brand_id, request.prompt):
             yield token
     return StreamingResponse(token_generator(), media_type="text/plain")
+
+@app.post("/generate_async")
+def generate_async(request:GenerationRequest):
+    task = generate_text_task.delay(request.brand_id, request.prompt)
+    return {
+        "task_id" : task.id,
+        "status" : "queued"
+    }
+
+@app.get("/task/{task_id}")
+def get_task(task_id):
+    task = celery.AsyncResult(task_id)
+    if task.ready():
+        return {
+            "status" : "completed",
+            "result" : task.result
+        }
+    return {"status":"processing"}

@@ -10,7 +10,7 @@ class KeywordIndex:
     
     def build(self, chunks):
         self.documents = [c["text"] for c in chunks]
-        self.b,25 = BM25Okapi(self.documents)
+        self.bm25 = BM25Okapi(self.documents)
 
     def search(self, query, top_k=5):
         query_tokens = query.split()
