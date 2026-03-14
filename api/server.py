@@ -9,6 +9,9 @@ from fastapi.responses import StreamingResponse
 from core.feedback.store import FeedbackStore
 from api.schemas_feedback import FeedbackRequest
 
+from core.training.dataset_builder import DatasetBuilder
+from core.training.lora_trainer import LoRATrainer
+
 app = FastAPI(
     title="OmniForge.ai",
     description="Brand Intelligence Generation System",
@@ -65,3 +68,16 @@ def submit_feedback(req : FeedbackRequest):
         brand_id=req.brand_id
     )
     return {"status":"feedback recorded"}
+
+## dataset trainer
+dataset_builder = DatasetBuilder()
+trainer = LoRATrainer()
+
+@app.post("/train_lora")
+def train_model():
+    dataset_size = dataset_builder.build_dataset()
+    trainer.train("data/training/lora_dataset.json1", "models/lora_adapter")
+    return {
+        "stats" : "training_started",
+        "dataset_size" : dataset_size
+    }

@@ -9,6 +9,8 @@ from .prompt_builder import PromptBuilder
 
 from core.rag.pipeline import RAGPipeline
 
+from .adapter_loader import AdapterLoader
+
 logger = logging.getLogger(__name__)
 
 class TextEngine:
@@ -21,6 +23,8 @@ class TextEngine:
         self.brand_configs = {}   # temp in memory store
         # per brand RAG pipeline
         self.brand_rag: Dict[str, RAGPipeline] = {}
+        # adapter loader
+        self.adapter_loader = AdapterLoader(self.loader.get_model())
 
     def register_brand(self, brand_id:str, config:Dict, knowledge_path:Optional[str]=None):
         # register a brand config and optionally ingest brand knowledge in RAG
@@ -65,7 +69,11 @@ class TextEngine:
 
         max_attempts = 3
         for attempt in range(max_attempts):
+            # raw_output = self.generator.generate(structured_prompt=structured_prompt, policy=policy)
+            model = self.adapter_loader.load_adapter(brand_id=self.brand_id)
+            generator = TextGenerator(model)
             raw_output = self.generator.generate(structured_prompt=structured_prompt, policy=policy)
+
             if not filter_layer.has_violation(raw_output):
                 return raw_output
             # if violation, reduce temp and retry
