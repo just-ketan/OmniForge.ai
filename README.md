@@ -1,252 +1,195 @@
-# OmniForge.ai  
-**Multimodal Brand Intelligence & Generative Marketing Platform**
+# OmniForge.ai
 
-OmniForge.ai is an agent-orchestrated AI platform that enables marketing teams to generate **brand-consistent text and visual assets** by learning directly from a brand’s proprietary knowledge base.  
-It combines **Retrieval-Augmented Generation (RAG)**, **Diffusion Models with LoRA**, and **Human-in-the-Loop alignment** to ensure accuracy, consistency, and control.
+OmniForge.ai is an autonomous AI-powered marketing campaign generator that combines Large Language Models, Retrieval-Augmented Generation (RAG), Neural Search, and Generative Vision models to create brand-aligned campaign text and visuals.
 
----
+The system retrieves brand knowledge, rewrites queries intelligently, generates contextual marketing copy, and produces campaign images — all through a unified orchestration engine.
 
-## 1. Problem Statement
+## Key Features
+  Autonomous Campaign Generation
+  Generates brand-aware marketing campaigns
+  Uses LLM + RAG context retrieval
+  Hybrid Retrieval System
+  Combines two search approaches:
+    Semantic Search (FAISS Vector DB)
+    Keyword Search (BM25)
+  Results are merged and reranked using a neural cross-encoder.
 
-Modern generative AI tools fail in enterprise marketing contexts because they:
-- Hallucinate brand facts
-- Drift from brand voice and tone
-- Produce inconsistent visual styles
-- Lack accountability and human oversight
+  Neural Reranking
+    Uses a CrossEncoder transformer to select the most relevant knowledge chunks before generation.
 
-**OmniForge solves this by making the brand the source of truth.**
+  Vision Generation
+  Uses Stable Diffusion to generate campaign visuals aligned with the generated text.
 
----
+  Modular AI Architecture
+  The system is built as independent AI modules:
+    Text Engine
+    RAG Pipeline
+    Vision Engine
+    Orchestration Agent
+    FastAPI Serving
 
-## 2. Core Capabilities (High-Yield Summary)
+Provides REST APIs for campaign generation.
 
-- **Brand-Grounded Intelligence** via RAG on internal documents
-- **Agent-Based Orchestration** for deterministic tool routing
-- **Precision Text Generation** with decoding-level constraints
-- **Brand-Consistent Image Generation** using LoRA-fine-tuned diffusion
-- **Human-in-the-Loop Optimization** through lightweight RLHF
-- **Strict Brand Isolation** across embeddings, prompts, LoRA, and feedback
-
----
-
-## 3. System Architecture Overview
-
-OmniForge follows a **Decoupled Micro-Engine Architecture** coordinated by a central routing agent.
-
+System Architecture
 ```yaml
-User
-↓
-API Gateway
-↓
-Chief Marketing Agent (Router)
-├── RAG Engine (Brand Knowledge)
-├── Text Engine (LLM + Decoding Control)
-├── Vision Engine (Diffusion + LoRA)
-└── Feedback Engine (Human Alignment)
+User Prompt
+     │
+     ▼
+Query Rewriter
+     │
+     ▼
+Hybrid Retrieval
+ ┌─────────────┐
+ │ FAISS Vector│
+ │ BM25 Keyword│
+ └─────────────┘
+     │
+     ▼
+Neural Reranker (CrossEncoder)
+     │
+     ▼
+Context Augmentation
+     │
+     ▼
+Mistral LLM Generator
+     │
+     ├── Campaign Text
+     │
+     ▼
+Vision Engine (Stable Diffusion)
+     │
+     ▼
+Campaign Image
 ```
 
-
-### Architectural Principles
-- **Separation of concerns** between reasoning, generation, and alignment
-- **Asynchronous execution** for compute-heavy tasks
-- **Deterministic control** at orchestration level
-- **Stateless agents with externalized session memory**
-
----
-
-## 4. Agentic Orchestration Layer
-
-### Chief Marketing Agent (Router)
-The agent is a **control plane**, not a creative thinker.
-
-**Responsibilities:**
-- Classify user intent (informational, copy, visual, campaign)
-- Decide when RAG is mandatory
-- Select appropriate generation engines
-- Enforce brand-specific policies
-- Maintain session context (brand, tone, platform)
-
-**Key Design Choice**
-> The agent routes decisions deterministically — generation randomness is confined to controlled decoding only.
-
----
-
-## 5. Knowledge Retrieval (RAG)
-
-### Multimodal Ingestion
-- PDFs parsed into:
-  - Text chunks
-  - Table-aware chunks
-  - Visual metadata (logos, imagery tags)
-
-### Vector Strategy
-- One embedding namespace per brand
-- Unified embedding model for consistency
-- Chunk provenance retained (document, page, section)
-
-**High-Yield Constraint**
-- No generation occurs without validated retrieved context for factual queries.
-
----
-
-## 6. Text Intelligence Layer
-
-### Tokenization
-- Brand-specific entities and terminology
-- Reserved special tokens for tone and compliance
-
-### Decoding Control (Critical Feature)
-- Custom logit processors enforce:
-  - Banned words
-  - Competitor name exclusion
-  - Tone constraints
-- Brand-specific:
-  - Temperature
-  - Top-p
-  - Stop sequences
-- Deterministic decoding mode for legal/compliance copy
-
-**Why This Matters**
-> Most hallucinations occur during decoding — OmniForge fixes this at the source.
-
----
-
-## 7. Vision Intelligence Layer
-
-### Diffusion Pipeline
-- Stable Diffusion–based generation
-- Separate VAE loading for high-fidelity logos
-
-### LoRA Fine-Tuning
-- One LoRA per brand
-- Fine-tuned on 15–20 curated brand images
-- Hot-swappable at inference time
-
-**Constraints**
-- Rank-limited LoRA (≤16 initially)
-- No cross-brand weight sharing
-- Text agent injects style tokens explicitly
-
----
-
-## 8. Human-in-the-Loop Optimization (RLHF-Lite)
-
-### Feedback Types
-- Binary (Good / Bad)
-- Pairwise ranking (A vs B)
-
-### What Gets Updated
-- Agent routing preferences
-- Prompt weighting
-- Decoding parameters (temperature, top-p)
-
-### What Does *Not* Get Updated (Initially)
-- Base LLM weights
-
-**Design Rationale**
-> Alignment happens at the **system level**, not by overwriting foundation models.
-
----
-
-## 9. Brand Isolation Model (Non-Negotiable)
-
-Each brand has isolated:
-- Vector embeddings
-- Prompt policies
-- LoRA weights
-- Feedback data
-- Session memory
-
-**Result**
-- Zero brand bleed
-- Legal and compliance safety
-- Clean multi-tenant scaling
-
----
-
-## 10. Non-Functional Requirements
-
-### Performance
-- Async image generation (Celery / Redis)
-- Streaming text responses
-
-### Scalability
-- Horizontal scaling of agents
-- Per-brand resource isolation
-
-### Security
-- Prompt-injection resistance
-- Sanitized uploads
-- Namespace hard-locks
-
-### Cost Control
-- Quantized LLM & diffusion (4-bit / 8-bit)
-- LoRA instead of full fine-tuning
-- Cached RAG responses
-
----
-
-## 11. Repository Structure
-
+Project Structure
 ```yaml
-OmniForge/
+OmniForge.ai
+│
+├── api/
+│   ├── server.py
+│   ├── dependencies.py
+│   └── tasks.py
+│
 ├── core/
-│ ├── agents/ # Routing, policies, session memory
-│ ├── text_engine/ # Tokenization, decoding, generation
-│ ├── vision_engine/ # Diffusion, LoRA, VAE utilities
-│ └── rag/ # Ingestion, embedding, retrieval
-├── data/
-│ └── brands/ # Brand-isolated storage
-├── api/ # FastAPI routes & schemas
-├── scripts/ # Training and ingestion scripts
-├── tests/ # Unit and integration tests
-├── requirements.txt
-├── .env
-└── main.py
+│   │
+│   ├── orchestrator/
+│   │   └── orchestrator.py
+│   │
+│   ├── text_engine/
+│   │   └── engine.py
+│   │
+│   ├── rag/
+│   │   ├── pipeline.py
+│   │   ├── retriever.py
+│   │   ├── reranker.py
+│   │   ├── keyword_index.py
+│   │   └── vector_store.py
+│   │
+│   ├── vision_engine/
+│   │   ├── engine.py
+│   │   ├── diffusion.py
+│   │   └── vae.py
+│
+├── models/
+│   └── mistral-7b-instruct-v0.2.gguf
+│
+├── outputs/
+│
+└── README.md
 ```
 
+## Technology Stack
+  Component	Technology
+  LLM	Mistral 7B
+  Embeddings	SentenceTransformers
+  Vector DB	FAISS
+  Keyword Search	BM25
+  Reranker	CrossEncoder
+  Image Generation	Stable Diffusion
+  Backend API	FastAPI
+  Task Queue	Celery
+  Cache	Redis
 
----
+## Installation
+```bash
+1. Clone Repository
+git clone https://github.com/yourusername/OmniForge.ai.git
+cd OmniForge.ai
+2. Create Virtual Environment
+python -m venv .venv
+source .venv/bin/activate
 
-## 12. Technology Stack
+4. Start Redis
+redis-server
+5. Start API Server
+uvicorn api.server:app --host 0.0.0.0 --port 8000
+```
 
-### Core
-- PyTorch
-- Hugging Face Transformers & Diffusers
-- PEFT (LoRA)
-- FAISS (Vector Search)
+Open: http://localhost:8000/docs
 
-### Orchestration
-- LangChain / LangGraph
 
-### Deployment
-- FastAPI
-- Uvicorn
-- Celery / Redis
+Example API Request
+```bash
+POST /generate_campaign
+Request:
 
----
+{
+  "brand_id": "nike",
+  "prompt": "Generate a motivational campaign for new running shoes"
+}
 
-## 13. Roadmap (Phased Execution)
+Response:
 
-1. **Text Intelligence Foundation**
-2. **RAG Knowledge Grounding**
-3. **Brand-Consistent Visual Generation**
-4. **Agent Autonomy & Human Alignment**
-5. **Deployment, Stress Testing, Hardening**
+{
+  "text": "Nike campaign copy...",
+  "image": "outputs/nike_image.png"
+}
+```
 
----
+## RAG Pipeline
+The system uses hybrid retrieval for higher accuracy.
 
-## 14. What Makes OmniForge Different
+### Step 1 — Semantic Search
+  Vector similarity using FAISS embeddings
 
-- Alignment is enforced **before** generation, not after
-- Brand consistency is structural, not prompt-only
-- Agents control systems, not just conversations
-- Humans remain in the loop without killing velocity
+### Step 2 — Keyword Search
+  BM25 keyword retrieval
 
----
+### Step 3 — Neural Reranking
+  CrossEncoder ranks the combined results.
 
-## Status
-🚧 **Active Development**  
-Phase 1: Text Intelligence & Decoding Control
+### Step 4 — Context Injection
+  Top context chunks are added to the prompt.
 
----
+### Step 5 — Generation
+  Mistral LLM generates the final campaign.
+
+### Vision Generation
+  The Vision Engine uses:
+    Stable Diffusion
+    Custom VAE pipeline
+
+### Prompt conditioning from campaign text
+  This produces campaign visuals aligned with generated copy.
+
+
+Example Output
+  Campaign Text:
+    Run Beyond Limits.
+    Nike introduces the new AeroStride series — engineered for athletes who refuse to slow down.
+
+  Generated Image:
+    outputs/nike_image.png
+
+
+### Why This Project Matters
+  OmniForge demonstrates real-world AI engineering:
+  LLM orchestration
+  Retrieval-Augmented Generation
+  Neural search systems
+  Hybrid information retrieval
+  Vision generation pipelines
+  Production API deployment
+
+It showcases end-to-end AI system design, not just model usage.
