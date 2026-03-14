@@ -18,3 +18,5 @@ class AdapterLoader:
         self.loaded_adapters[brand_id]=model
 
         return model
+    
+## OmniForge can actually load brand specific LoRA weights
