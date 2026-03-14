@@ -1,16 +1,22 @@
 from .query_rewriter import QueryRewriter
+from core.vision_engine.engine import VisionEngine
 
 class OmniOrchestrator:
     def __init__(self, engine):
         self.engine = engine
         self.rewriter = QueryRewriter()
+        self.vision = VisionEngine()
 
     def run(self, brand_id, query):
         planned_query = self.plan(query)    # planner agent
         context = self.retrieve(brand_id, planned_query)    # retrieve context
         safe_query = self.compliance_check(planned_query)   # compliance check
         response = self.generate(brand_id, safe_query, context) # generate response
-        return response
+        image = self.vision.generate(brand_id=brand_id, query=safe_query)
+        return {
+            "text" : response,
+            "image" : image
+        }
     
     def plan(self, query):
         ## wire query rewriting

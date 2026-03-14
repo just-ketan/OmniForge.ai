@@ -86,7 +86,8 @@ def train_model():
 
 ## orchestrator init
 orchestrator = OmniOrchestrator(get_engine())
-@app.post("/generate")
+@app.post("/generate_campaign")
 def generate(req : GenerationRequest):
     res = orchestrator.run(req.brand_id, req.prompt)
-    return {"responses" : res}
+    return res
+
