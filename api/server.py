@@ -12,6 +12,8 @@ from api.schemas_feedback import FeedbackRequest
 from core.training.dataset_builder import DatasetBuilder
 from core.training.lora_trainer import LoRATrainer
 
+from core.orchestrator.orechestrator import OmniOrchestrator 
+
 app = FastAPI(
     title="OmniForge.ai",
     description="Brand Intelligence Generation System",
@@ -81,3 +83,10 @@ def train_model():
         "stats" : "training_started",
         "dataset_size" : dataset_size
     }
+
+## orchestrator init
+orchestrator = OmniOrchestrator(get_engine())
+@app.post("/generate")
+def generate(req : GenerationRequest):
+    res = orchestrator.run(req.brand_id, req.prompt)
+    return {"responses" : res}
