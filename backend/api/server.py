@@ -14,10 +14,27 @@ from core.training.lora_trainer import LoRATrainer
 
 from core.orchestrator.orechestrator import OmniOrchestrator 
 
+from fastapi.middleware.cors import CORSMiddleware
+
+from fastapi.staticfiles import StaticFiles
+
 app = FastAPI(
     title="OmniForge.ai",
     description="Brand Intelligence Generation System",
     version="0.1"
+)
+
+app.mount(
+	"/outputs",
+	StaticFiles(directory="outputs"),
+	name="outputs"
+)
+
+app.add_middleware(
+	CORSMiddleware,
+	allow_origins=["*"],
+	allow_methods=["*"],
+	allow_headers=["*"],
 )
 
 @app.get("/")
