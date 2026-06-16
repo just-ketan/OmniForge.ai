@@ -1,0 +1,26 @@
+[
+  {
+    "brand_id": "Nike",
+    "config": {
+      "tone": "Professional",
+      "competitors": [],
+      "banned_words": []
+    }
+  },
+  {
+    "brand_id": "TestBrand1",
+    "config": {
+      "tone": "Professional",
+      "competitors": [],
+      "banned_words": []
+    }
+  },
+  {
+    "brand_id": "Adidas",
+    "config": {
+      "tone": "Professional",
+      "competitors": [],
+      "banned_words": []
+    }
+  }
+]

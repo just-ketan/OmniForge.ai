@@ -19,7 +19,11 @@ class TextEngine:
     def __init__(self, model_path:str):
         self.loader = ModelLoader(model_path=model_path)
         self.loader.load()
-        self.generator = TextGenerator(self.loader.get_model())
+        model = self.loader.get_model()
+        if model:
+            self.generator = TextGenerator(model)
+        else:
+            self.generator = None
         self.brand_configs = {}   # temp in memory store
         # per brand RAG pipeline
         self.brand_rag: Dict[str, RAGPipeline] = {}
@@ -69,10 +73,26 @@ class TextEngine:
 
         max_attempts = 3
         for attempt in range(max_attempts):
-            # raw_output = self.generator.generate(structured_prompt=structured_prompt, policy=policy)
             model = self.adapter_loader.load_adapter(brand_id=brand_id)
             generator = TextGenerator(model)
-            raw_output = self.generator.generate(structured_prompt=structured_prompt, policy=policy)
+
+            if self.generator is None:
+                return f"""
+                Campaign Draft
+
+                Brand: {brand_id}
+
+                Prompt:
+                {prompt}
+
+                [Development Mode]
+                No local model is loaded.
+                """
+
+            raw_output = self.generator.generate(
+                structured_prompt=structured_prompt,
+                policy=policy
+            )
 
             if not filter_layer.has_violation(raw_output):
                 return raw_output

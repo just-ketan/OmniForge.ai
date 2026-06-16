@@ -1,135 +1,86 @@
-# ==============================
-# 🔹 Python
-# ==============================
-__pycache__/
-*.py[cod]
-*$py.class
+# ==========================
+# Python
+# ==========================
 
-*.so
-*.dylib
-*.dll
-
-.Python
-.env
-.env.*
 .venv/
 venv/
-ENV/
 env/
 
-pip-log.txt
-pip-delete-this-directory.txt
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-node_modules/
-# ==============================
-# 🔹 Logs
-# ==============================
+# ==========================
+# FastAPI / Logs
+# ==========================
+
 *.log
 logs/
-*.out
 
-# ==============================
-# 🔹 Model Files (Very Important)
-# ==============================
-# GGUF / GGML / LLM binaries
+# ==========================
+# Models
+# ==========================
+
 models/
 *.gguf
-*.ggml
 *.bin
 *.safetensors
 
-# HuggingFace cache
-.cache/
-huggingface/
-~/.cache/huggingface/
+# ==========================
+# Vector DB
+# ==========================
 
-# ==============================
-# 🔹 Vector DB / RAG
-# ==============================
-data/embeddings/
-*.faiss
-*.index
-*.npy
-*.pkl
+backend/data/vector_db/
 
-# ==============================
-# 🔹 LoRA / Fine-tuning Artifacts
-# ==============================
-data/lora_weights/
-checkpoints/
-trainer_state.json
-adapter_config.json
-adapter_model.bin
+# ==========================
+# Training Outputs
+# ==========================
 
-# ==============================
-# 🔹 Diffusion / Image Outputs
-# ==============================
+backend/data/training/
+backend/models/lora_adapter/
 outputs/
-generated_images/
-*.png
-*.jpg
-*.jpeg
 
-# ==============================
-# 🔹 RLHF / Reward Models
-# ==============================
-reward_models/
-feedback_data/
-*.csv
-*.jsonl
+# ==========================
+# Secrets
+# ==========================
 
-# ==============================
-# 🔹 FastAPI / Runtime
-# ==============================
-*.db
-*.sqlite3
+.env
+.env.local
+.env.production
+.env.development
 
-# ==============================
-# 🔹 Celery / Redis (future)
-# ==============================
-celerybeat-schedule
-*.pid
+# ==========================
+# Node / Next.js
+# ==========================
 
-# ==============================
-# 🔹 IDE
-# ==============================
-.vscode/
-.idea/
-*.swp
-*.swo
+frontend/node_modules/
+frontend/.next/
+frontend/out/
 
-# ==============================
-# 🔹 OS Junk
-# ==============================
+# ==========================
+# OS Files
+# ==========================
+
 .DS_Store
 Thumbs.db
-desktop.ini
 
-# ==============================
-# 🔹 Docker (future)
-# ==============================
-docker-compose.override.yml
-*.tar
+# ==========================
+# IDE
+# ==========================
 
-# ==============================
-# 🔹 Coverage / Testing
-# ==============================
-.coverage
-coverage.xml
-htmlcov/
-.pytest_cache/
+.vscode/
+.idea/
 
-# ==============================
-# 🔹 Build Artifacts
-# ==============================
-build/
-dist/
-*.egg-info/
+# ==========================
+# Runtime Data
+# ==========================
 
-# ==============================
-# 🔹 Large Temporary Files
-# ==============================
-*.tmp
-*.bak
+backend/data/feedback/*.jsonl
 
-*.sh
+# Optional:
+# Ignore generated campaign history
+# Uncomment if you don't want sample data in Git
+#
+# backend/data/campaigns.json
+# backend/data/brands.json

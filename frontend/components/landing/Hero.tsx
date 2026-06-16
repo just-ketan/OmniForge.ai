@@ -1,44 +1,33 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center text-center px-8">
+    <section className="py-32 text-center">
+      <motion.h1
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-7xl font-bold"
+      >
+        OmniForge.ai
+      </motion.h1>
 
-      <div className="max-w-5xl">
+      <p className="mt-8 text-xl text-gray-500 max-w-3xl mx-auto">
+        Multi-Agent Brand Intelligence Platform powered by
+        Local LLMs, Hybrid RAG, Knowledge Retrieval,
+        Campaign Generation and AI Content Creation.
+      </p>
 
-        <div className="text-sm border rounded-full px-4 py-2 inline-block mb-6">
-          Multi-Agent AI Marketing Platform
-        </div>
+      <div className="mt-10 flex justify-center gap-4">
+        <button className="px-6 py-3 rounded-xl bg-black text-white">
+          Try Demo
+        </button>
 
-        <h1 className="text-7xl font-bold tracking-tight">
-          OmniForge AI
-        </h1>
-
-        <p className="text-2xl text-muted-foreground mt-6">
-          Enterprise-grade AI platform that combines
-          Multi-Agent Planning,
-          Brand Memory,
-          Hybrid RAG,
-          LLM Generation,
-          and AI Creative Production.
-        </p>
-
-        <div className="mt-10 flex gap-4 justify-center">
-
-          <Button size="lg">
-            Try Demo
-          </Button>
-
-          <Button variant="outline" size="lg">
-            View Architecture
-          </Button>
-
-        </div>
-
+        <button className="px-6 py-3 rounded-xl border">
+          View Architecture
+        </button>
       </div>
-
     </section>
   );
 }

@@ -1,48 +1,45 @@
-import { Card } from "@/components/ui/card";
+import { Brain, Search, Database, Image } from "lucide-react";
 
 const features = [
   {
-    title: "Multi-Agent Planning",
-    desc: "Planner, Retriever and Generator agents collaborate."
+    title: "Agentic Workflow",
+    icon: Brain,
+    desc: "Planner + Retrieval + Generation orchestration"
   },
   {
-    title: "Hybrid RAG",
-    desc: "Vector search + BM25 + reranking."
+    title: "Hybrid Retrieval",
+    icon: Search,
+    desc: "BM25 + Vector Search + Cross Encoder"
   },
   {
-    title: "Brand Memory",
-    desc: "Persistent company knowledge and guidelines."
+    title: "Knowledge Base",
+    icon: Database,
+    desc: "Brand-specific isolated RAG pipelines"
   },
   {
-    title: "Creative Generation",
-    desc: "Stable Diffusion powered marketing creatives."
+    title: "Visual Generation",
+    icon: Image,
+    desc: "AI generated campaign creatives"
   }
 ];
 
 export default function Features() {
   return (
-    <section className="py-32">
-
-      <h2 className="text-5xl font-bold text-center mb-16">
-        Core Capabilities
-      </h2>
-
-      <div className="grid md:grid-cols-2 gap-8">
-
-        {features.map((feature) => (
-          <Card key={feature.title} className="p-8">
-            <h3 className="text-2xl font-bold">
-              {feature.title}
-            </h3>
-
-            <p className="mt-4 text-muted-foreground">
-              {feature.desc}
+    <section className="py-24">
+      <div className="grid md:grid-cols-4 gap-6">
+        {features.map((f) => (
+          <div
+            key={f.title}
+            className="border rounded-2xl p-6"
+          >
+            <f.icon className="mb-4" />
+            <h3 className="font-bold">{f.title}</h3>
+            <p className="text-gray-500 mt-2">
+              {f.desc}
             </p>
-          </Card>
+          </div>
         ))}
-
       </div>
-
     </section>
   );
 }
