@@ -21,7 +21,11 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
-    headers: { "content-type": "application/json", ...(init?.headers ?? {}) },
+    headers: {
+      "content-type": "application/json",
+      "ngrok-skip-browser-warning": "true",
+      ...(init?.headers ?? {}),
+    },
   });
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
   return res.json() as Promise<T>;
@@ -55,7 +59,10 @@ export const api = {
     if (!API_URL) throw new Error("VITE_API_URL is not configured");
     const res = await fetch(`${API_URL}/generate_stream`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: {
+        "content-type": "application/json",
+        "ngrok-skip-browser-warning": "true",
+      },
       body: JSON.stringify({ brand_id, prompt }),
       signal,
     });
